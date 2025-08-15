@@ -1,0 +1,6 @@
+@famous_wiki_people_HostAddress = http://localhost:5065
+
+GET {{famous_wiki_people_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
