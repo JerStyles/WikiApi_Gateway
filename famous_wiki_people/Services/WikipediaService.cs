@@ -1,8 +1,7 @@
-
 using Microsoft.Extensions.Options;
-using WikiPeople.Settings;
+using Wikipedia.Settings;
 
-namespace WikiPeople.Services
+namespace Wikipedia.Services
 {
     public class WikipediaService
     {
@@ -10,17 +9,18 @@ namespace WikiPeople.Services
         private readonly string _clientSecret;
         private readonly string _accessToken;
 
-        public WikipediaService(IOptions<WikipediaApiSettings> wikipediaSettings)
+        public WikipediaService(IOptions<WikipediaApiSettings> wikipediaApiSettings)
         {
-            _clientId = wikipediaSettings.Value.ClientId;
-            _clientSecret = wikipediaSettings.Value.ClientSecret;
-            _accessToken = wikipediaSettings.Value.AccessToken;
+            _clientId = wikipediaApiSettings.Value.ClientId;
+            _clientSecret = wikipediaApiSettings.Value.ClientSecret;
+            _accessToken = wikipediaApiSettings.Value.AccessToken;
         }
 
         public void QueryData()
         {
-            Console.WriteLine($"Using clientId: {_clientId}");
+            Console.WriteLine($"ClientId: {_clientId}");
+            Console.WriteLine($"ClientSecret: {_clientSecret}");
         }
-    }
 
+    }
 }
