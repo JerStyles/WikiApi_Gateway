@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace WikiPeople.Controllers
+namespace WikiPeople.Controller
 {
     [Route("api")]
     [ApiController]
@@ -9,7 +9,7 @@ namespace WikiPeople.Controllers
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            return new string[] { "wiki", "data", "people" };
+            return new string[] { "wiki", "people", "data" };
         }
     }
 }
