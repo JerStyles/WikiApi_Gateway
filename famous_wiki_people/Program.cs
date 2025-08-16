@@ -1,3 +1,6 @@
+using WikiPeople.Settings;
+using WikiPeople.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +9,9 @@ builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.Configure<WikipediaApiSettings>(builder.Configuration.GetSection("WikipediaApi"));
+builder.Services.AddScoped<WikipediaService>();
 
 
 var app = builder.Build();
