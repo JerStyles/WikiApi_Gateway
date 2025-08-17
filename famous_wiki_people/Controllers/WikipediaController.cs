@@ -1,32 +1,66 @@
 using Microsoft.AspNetCore.Mvc;
+using Wikipedia.DTOs;
 using Wikipedia.Services;
 
 namespace Wikipedia.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class WikipediaController : ControllerBase
     {
-        private readonly WikipediaService _wikipediaService;
+        private readonly IWikipediaService _wikipediaService;
+        private readonly ILogger<WikipediaController> _logger;
 
-        public WikipediaController(WikipediaService wikipediaService)
+
+        public WikipediaController(IWikipediaService wikipediaService, ILogger<WikipediaController> logger)
         {
             _wikipediaService = wikipediaService;
+            _logger = logger;
         }
 
-        [HttpGet("testEndpoint")]
-        public IActionResult TriggerQueryData()
+
+        [HttpGet("page-api-endpoints")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiErrorDto), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ApiErrorDto), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetListOfPageApiEntrypointsAsync()
         {
-            try
-            {
-                _wikipediaService.QueryData();
-                return Ok("Successfully query data");
 
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Failed with error message: {ex.Message}");
-            }
+            var result = await _wikipediaService.GetListOfPageApiEndpointsAsync();
+            return Ok(result);
+
         }
+
+
+        [HttpGet("search")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiErrorDto), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ApiErrorDto), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> SearchWiki([FromQuery] string searchTerm)
+        {
+            if (string.IsNullOrWhiteSpace(searchTerm))
+            {
+                return BadRequest(new ApiErrorDto("searchTerm is required and cannot be empty."));
+            }
+
+            var result = await _wikipediaService.SearchArticlesAsync(searchTerm);
+            return Ok(result);
+        }
+
+        [HttpGet("search-with-images")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiErrorDto), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ApiErrorDto), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> SearchWikiWithImages([FromQuery] string searchTerm)
+        {
+            if (string.IsNullOrWhiteSpace(searchTerm))
+            {
+                return BadRequest(new ApiErrorDto("search term is required and cannot be empty."));
+            }
+
+            var result = await _wikipediaService.SearchArticlesWithImagesAsync(searchTerm);
+            return Ok(result);
+        }
+
     }
 }

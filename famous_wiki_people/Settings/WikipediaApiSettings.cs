@@ -1,11 +1,10 @@
-using Microsoft.AspNetCore.Mvc;
-
 namespace Wikipedia.Settings
 {
     public class WikipediaApiSettings
     {
-        public string ClientId { get; init; }
-        public string ClientSecret { get; init; }
-        public string AccessToken { get; init; }
+        public string BaseUrl { get; set; }
+        public string RestApiPageEndpoint { get; set; }
+        public string ActionApiEndpoint { get; set; }
+        
     }
 }
