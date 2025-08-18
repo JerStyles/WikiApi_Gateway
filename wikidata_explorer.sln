@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "famous_wiki_people", "famous_wiki_people\famous_wiki_people.csproj", "{AA5593CA-3879-4FC4-CE97-56FC47560C7D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "query_wiki_pages", "query_wiki_pages\query_wiki_pages.csproj", "{AA5593CA-3879-4FC4-CE97-56FC47560C7D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
