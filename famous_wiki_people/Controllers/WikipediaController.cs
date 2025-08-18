@@ -26,7 +26,7 @@ namespace Wikipedia.Controllers
         public async Task<IActionResult> GetListOfPageApiEntrypointsAsync()
         {
 
-            var result = await _wikipediaService.GetListOfPageApiEndpointsAsync();
+            var result = await _wikipediaService.GetListOfPageApiEndpointsAsync().ConfigureAwait(false);
             return Ok(result);
 
         }
@@ -58,7 +58,7 @@ namespace Wikipedia.Controllers
                 return BadRequest(new ApiErrorDto("search term is required and cannot be empty."));
             }
 
-            var result = await _wikipediaService.SearchArticlesWithImagesAsync(searchTerm);
+            IAsyncEnumerable<SearchResultWithImageDto> result = _wikipediaService.SearchArticlesWithImagesAsync(searchTerm);
             return Ok(result);
         }
 

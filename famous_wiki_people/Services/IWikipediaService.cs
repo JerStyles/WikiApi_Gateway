@@ -1,4 +1,5 @@
 using Wikipedia.DTOs;
+using System.Runtime.CompilerServices;
 
 namespace Wikipedia.Services
 {
@@ -6,8 +7,8 @@ namespace Wikipedia.Services
     {
         public Task<string> GetListOfPageApiEndpointsAsync();
 
-        public IAsyncEnumerable<SearchResultDto>  SearchArticlesAsync(string searchTerm);
+        public IAsyncEnumerable<SearchResultDto> SearchArticlesAsync(string searchTerm, [EnumeratorCancellation] CancellationToken cancellationToken = default);
 
-        public Task<IEnumerable<SearchResultWithImageDto>> SearchArticlesWithImagesAsync(string searchTerm);
+        public IAsyncEnumerable<SearchResultWithImageDto> SearchArticlesWithImagesAsync(string searchTerm, [EnumeratorCancellation] CancellationToken cancellationToken = default);
     }
 }
