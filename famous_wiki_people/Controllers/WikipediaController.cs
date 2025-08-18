@@ -43,7 +43,7 @@ namespace Wikipedia.Controllers
                 return BadRequest(new ApiErrorDto("searchTerm is required and cannot be empty."));
             }
 
-            var result = await _wikipediaService.SearchArticlesAsync(searchTerm);
+            IAsyncEnumerable<SearchResultDto> result = _wikipediaService.SearchArticlesAsync(searchTerm);
             return Ok(result);
         }
 

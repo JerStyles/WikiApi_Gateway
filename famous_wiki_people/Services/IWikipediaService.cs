@@ -6,7 +6,7 @@ namespace Wikipedia.Services
     {
         public Task<string> GetListOfPageApiEndpointsAsync();
 
-        public Task<IEnumerable<SearchResultDto>> SearchArticlesAsync(string searchTerm);
+        public IAsyncEnumerable<SearchResultDto>  SearchArticlesAsync(string searchTerm);
 
         public Task<IEnumerable<SearchResultWithImageDto>> SearchArticlesWithImagesAsync(string searchTerm);
     }

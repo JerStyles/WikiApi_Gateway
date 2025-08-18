@@ -27,7 +27,7 @@ namespace Wikipedia.Services
         {
             try
             {
-                HttpResponseMessage response = await _httpClient.GetAsync(_apiSettings.RestApiPageEndpoint);
+                HttpResponseMessage response = await _httpClient.GetAsync(_apiSettings.RestApiPageEndpoint).ConfigureAwait(false);
                 response.EnsureSuccessStatusCode();
                 return await response.Content.ReadAsStringAsync();
             }
@@ -42,10 +42,13 @@ namespace Wikipedia.Services
 
         }
 
-        public async Task<IEnumerable<SearchResultDto>> SearchArticlesAsync(string searchTerm)
+        public async IAsyncEnumerable<SearchResultDto> SearchArticlesAsync(string searchTerm)
         {
             var searchResults = await FetchSearchResults(searchTerm);
-            return searchResults.Select(r => new SearchResultDto(r.PageId, r.Title, r.Snippet));
+            foreach (var result in searchResults)
+            {
+                yield return new SearchResultDto(result.PageId, result.Title, result.Snippet);
+            }
 
         }
 
@@ -59,7 +62,7 @@ namespace Wikipedia.Services
             }
 
             var pageIds = searchResults.Select(r => r.PageId).ToList();
-            var imageUrls = await FetchImageUrls(pageIds);
+            var imageUrls = await FetchImageUrlsInBatchesAsync(pageIds);
 
             return searchResults.Select(r => new SearchResultWithImageDto(
                 r.PageId,
@@ -80,14 +83,39 @@ namespace Wikipedia.Services
                 {"format", "json"}
             };
 
-            var resultUri = $"{_apiSettings.ActionApiEndpoint}?{await new FormUrlEncodedContent(query).ReadAsStringAsync()}";
+            var resultUri = $"{_apiSettings.ActionApiEndpoint}?{await new FormUrlEncodedContent(query).ReadAsStringAsync().ConfigureAwait(false)}";
 
             var response = await _httpClient.GetFromJsonAsync<WikipediaApiQueryResponse>(resultUri);
 
             return response?.Query?.Search ?? new List<RawSearchResult>();
         }
 
-        private async Task<Dictionary<long, string>> FetchImageUrls(IEnumerable<long> pageIds)
+        private async Task<Dictionary<long, string>> FetchImageUrlsInBatchesAsync(IEnumerable<long> pageIds)
+        {
+            var allImageUrls = new Dictionary<long, string>();
+            const int batchSize = 20;
+
+            var allFetchTask = new List<Task<Dictionary<long, string>>>();
+
+            var pageIdBatches = pageIds.Chunk(batchSize);
+
+            foreach (var batch in pageIdBatches)
+            {
+                allFetchTask.Add(FetchImageUrlsForSingleBatchAsync(batch));
+            }
+
+            var completedTask = await Task.WhenAll(allFetchTask);
+            foreach (var dictionary in completedTask)
+            {
+                foreach (var entry in dictionary)
+                {
+                    allImageUrls[entry.Key] = entry.Value;
+                }
+            }
+
+            return allImageUrls;
+        }
+        private async Task<Dictionary<long, string>> FetchImageUrlsForSingleBatchAsync(IEnumerable<long> pageIds)
         {
             var pageIdString = string.Join("|", pageIds);
             var query = new Dictionary<string, string>
@@ -99,7 +127,7 @@ namespace Wikipedia.Services
                 { "format", "json"}
             };
 
-            var resultUri = $"{_apiSettings.ActionApiEndpoint}?{await new FormUrlEncodedContent(query).ReadAsStringAsync()}";
+            var resultUri = $"{_apiSettings.ActionApiEndpoint}?{await new FormUrlEncodedContent(query).ReadAsStringAsync().ConfigureAwait(false)}";
 
             var response = await _httpClient.GetFromJsonAsync<WikipediaImageApiResponse>(resultUri);
 
