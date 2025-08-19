@@ -44,7 +44,7 @@ namespace Wikipedia.Controllers
                 return BadRequest(new ApiErrorDto("searchTerm is required and cannot be empty."));
             }
 
-            var result = _wikipediaService.SearchArticlesAsync(searchTerm);
+            var result = _wikipediaService.SearchArticlesAsync(searchTerm, HttpContext.RequestAborted);
             return Ok(result);
         }
 
@@ -60,7 +60,7 @@ namespace Wikipedia.Controllers
                 return BadRequest(new ApiErrorDto("search term is required and cannot be empty."));
             }
 
-            var result = _wikipediaService.SearchArticlesWithImagesAsync(searchTerm);
+            var result = _wikipediaService.SearchArticlesWithImagesAsync(searchTerm, HttpContext.RequestAborted);
             return Ok(result);
         }
 
