@@ -5,9 +5,6 @@ using Wikipedia.Settings;
 using Wikipedia.Models;
 
 using System.Net;
-using System.Text.Json;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http.Features;
 using Wikipedia.Exceptions;
 
 namespace Wikipedia.Services
@@ -39,8 +36,6 @@ namespace Wikipedia.Services
                     $"Failed to query info from Wikipedia API: {ex.Message}"
                 );
             }
-
-
         }
 
         public async IAsyncEnumerable<SearchResultDto> SearchArticlesAsync(string searchTerm, [EnumeratorCancellation] CancellationToken cancellationToken = default)
@@ -51,7 +46,6 @@ namespace Wikipedia.Services
                 cancellationToken.ThrowIfCancellationRequested();
                 yield return new SearchResultDto(result.PageId, result.Title, result.Snippet);
             }
-
         }
 
         public async IAsyncEnumerable<SearchResultWithImageDto> SearchArticlesWithImagesAsync(string searchTerm, [EnumeratorCancellation] CancellationToken cancellationToken = default)

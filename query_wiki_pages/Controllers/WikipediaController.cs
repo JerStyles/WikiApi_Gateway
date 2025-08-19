@@ -40,10 +40,11 @@ namespace Wikipedia.Controllers
         {
             if (string.IsNullOrWhiteSpace(searchTerm))
             {
+                _logger.LogWarning($"Invalid searchTerm: {searchTerm}");
                 return BadRequest(new ApiErrorDto("searchTerm is required and cannot be empty."));
             }
 
-            IAsyncEnumerable<SearchResultDto> result = _wikipediaService.SearchArticlesAsync(searchTerm);
+            var result = _wikipediaService.SearchArticlesAsync(searchTerm);
             return Ok(result);
         }
 
@@ -55,10 +56,11 @@ namespace Wikipedia.Controllers
         {
             if (string.IsNullOrWhiteSpace(searchTerm))
             {
+                _logger.LogWarning($"Invalid searchTerm: {searchTerm}");
                 return BadRequest(new ApiErrorDto("search term is required and cannot be empty."));
             }
 
-            IAsyncEnumerable<SearchResultWithImageDto> result = _wikipediaService.SearchArticlesWithImagesAsync(searchTerm);
+            var result = _wikipediaService.SearchArticlesWithImagesAsync(searchTerm);
             return Ok(result);
         }
 
