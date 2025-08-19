@@ -44,10 +44,12 @@ app.UseExceptionHandler(appError =>
 if (app.Environment.IsDevelopment())
 {
     // app.MapOpenApi();
+    app.UseStaticFiles();
     app.UseSwagger();
     app.UseSwaggerUI(options =>
     {
         options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+        options.InjectStylesheet("/swagger-ui/SwaggerDark.css");
         options.RoutePrefix = string.Empty;
     });
 }

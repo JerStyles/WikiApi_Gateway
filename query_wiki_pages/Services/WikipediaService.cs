@@ -16,9 +16,11 @@ namespace Wikipedia.Services
 
         public WikipediaService(HttpClient httpClient, IOptions<WikipediaApiSettings> apiSettings)
         {
-            _httpClient = httpClient;
+
             _apiSettings = apiSettings.Value;
+            _httpClient = httpClient;
             _httpClient.BaseAddress = new Uri(_apiSettings.BaseUrl);
+            _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(_apiSettings.UserAgent);
         }
 
         public async Task<string> GetListOfPageApiEndpointsAsync()

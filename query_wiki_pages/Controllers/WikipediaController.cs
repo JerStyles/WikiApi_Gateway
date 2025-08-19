@@ -32,7 +32,7 @@ namespace Wikipedia.Controllers
         }
 
 
-        [HttpGet("search")]
+        [HttpGet("search-eglish-keywords")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorDto), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ApiErrorDto), StatusCodes.Status500InternalServerError)]
@@ -48,7 +48,7 @@ namespace Wikipedia.Controllers
             return Ok(result);
         }
 
-        [HttpGet("search-with-images")]
+        [HttpGet("search-english-keyword-with-thumbnail")]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorDto), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ApiErrorDto), StatusCodes.Status500InternalServerError)]
